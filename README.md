@@ -29,7 +29,7 @@ $ git remote -v // check
 
 remote가 정상적으로 연결되었다면 업데이트 합니다. 업데이트는 다음와 같은 단계로 진행됩니다.
 
-1. fetch로 원본을 변셩사항 내려받기
+1. fetch로 원본을 변경사항 내려받기
 2. 내려받은 변경사항을 내 local repository와 merge
 3. merge한 내용을 내 원격 저장소에 반영
 
@@ -38,6 +38,8 @@ $ git fetch upstream // 원본의 변경사항 내려받기
 $ git merge upstream/main // 내려받은 변경사항을 나의 repository와 merge
 $ git push origin main // 내 원격 저장소에 반영
 ```
+
+해당 과정을 거치는 이유는 변경사항을 확인할 수 있도록 하여, 자동으로 merge를 진행하는 pull보다 조금 더 안전하게 업데이트를 진행하기 위함입니다.
 
 ## Directory Tree
 
