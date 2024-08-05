@@ -6,6 +6,7 @@ def chk_test():
 
     for w_i in range(w):
         is_success = False
+
         for d_i in range(d - k + 1):
             cur_chk = [film[tmp_i][w_i] for tmp_i in range(d_i, d_i + k)]
             if cur_chk == chk_a_list or cur_chk == chk_b_list:
@@ -15,16 +16,12 @@ def chk_test():
             return False
     return True
 
+
 def test_film(film, depth=0, cnt_inject=0, chk_list=[]):
     global min_inject
     
     if cnt_inject >= min_inject:
         return
-
-    # if len(chk_list) == d:
-    #     for row in film:
-    #         print(row)
-    #     print(chk_test(), cnt_inject, chk_list)
 
     if chk_test():
         min_inject = min(min_inject, cnt_inject)
