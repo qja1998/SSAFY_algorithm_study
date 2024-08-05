@@ -1,0 +1,6 @@
+s = int(input())
+a = int(input())
+print(s *( a % 10))
+print(s *(a // 10 % 10))
+print(s *(a//100))
+print(s * a)
