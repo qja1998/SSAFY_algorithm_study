@@ -50,6 +50,7 @@ for t in range(test_case):
                 if ny == None:
                     continue
 
+                
                 # 약품 처리(0 - 1, 2 - 3)
                 if ny == 0 or ny == n - 1 or nx == 0 or nx == n -1:
                     num = num // 2
