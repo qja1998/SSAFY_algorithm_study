@@ -1,5 +1,6 @@
 from collections import defaultdict
 
+# 하 상 우 좌
 dyx = [(1, 0), (-1, 0), (0, 1), (0, -1)]
 
 def init_dict():
@@ -48,6 +49,7 @@ def wormhall(wormhall, y, x):
     return ny, nx
 
 def pin_ball(y, x, d, start_yx, score=0):
+    print(y, x, d)
 
     while True:
         global max_score
