@@ -48,9 +48,9 @@ def wormhall(wormhall, y, x):
     return ny, nx
 
 def pin_ball(y, x, d, start_yx, score=0):
-    global max_score
-    
+
     while True:
+        global max_score
         ny, nx = y + dyx[d][0], x + dyx[d][1]
 
         # 범위 벗어나는 경우
