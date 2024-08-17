@@ -12,41 +12,55 @@ dyx = [(1, 1), (1, -1), (-1, -1), (-1, 1)]
 
 test_case = int(input())
 
-def calculate_path(x, y, dia_cnt, visitied):
+def calculate_path(x, y, dia_cnt, visitied, test_v):
+    visitied_tmp = visitied[:]
     for i, cnt in enumerate(dia_cnt):
         for _ in range(cnt):
-            if start_yx == (y, x):
-                continue
+            
             dy, dx = dyx[i + 2]
             y, x = y + dy, x + dx
-            if cafe_matrix[y][x] in visitied:
+            if start_yx == (y, x):
+                continue
+            if cafe_matrix[y][x] in visitied_tmp:
                 return False
-            visitied += [cafe_matrix[y][x]]
+            if not(0 <= y < n) or not(0 <= x < n):
+                return False
+            visitied_tmp += [cafe_matrix[y][x]]
+            # test_v += [[x, y]]
+            # print(visitied)
+            # print(test_v)
     return True
 
 
-def search_path(x, y, d, menu_cnt=0, dia_cnt=[0, 0], visitied=[]):
+def search_path(x, y, d_pre, menu_cnt=1, dia_cnt=[0, 0], visitied=[], test_v=[]):
     global max_cnt
-    print(visitied)
-    if d >= 2:
+    
+    if d_pre == 1 and dia_cnt[0]*dia_cnt[1] != 0:
+        # print(menu_cnt)
+        # print(visitied)
+        # print(test_v)
+        
         # 바로 순회하며 계산
-        if calculate_path(x, y, dia_cnt, visitied):
+        if calculate_path(x, y, dia_cnt, visitied, test_v+[[x, y]]):
             max_cnt = max(max_cnt, (menu_cnt-1) * 2)
-            print(max_cnt)
-        return
+        #     print("max:", max_cnt)
+        # print()
     
-    ny, nx = y + dyx[d][0], x + dyx[d][1]
+    for d in range(2):
+        # 방향을 한 번 바꾼 경우 그 방향으로만 가야함
+        if d_pre == 1 and d == 0:
+            continue
+        ny, nx = y + dyx[d][0], x + dyx[d][1]
 
-    if not(0 <= ny < n) or not(0 <= nx < n):
-        return
-    if cafe_matrix[ny][nx] in visitied:
-        return
-    
-    dia_cnt[d] += 1
-    # 직진
-    search_path(nx, ny, d, menu_cnt+1, dia_cnt, visitied + [cafe_matrix[y][x]])
-    # 꺾기
-    search_path(nx, ny, d + 1, menu_cnt+1, dia_cnt,  visitied + [cafe_matrix[y][x]])
+        if not(0 <= ny < n) or not(0 <= nx < n):
+            continue
+        if cafe_matrix[ny][nx] in visitied:
+            continue
+        
+        dia_tmp = dia_cnt[:]
+        dia_tmp[d] += 1
+
+        search_path(nx, ny, d, menu_cnt+1, dia_tmp, visitied+[cafe_matrix[ny][nx]], test_v+[[nx, ny]])
 
 for t in range(test_case):
     n = int(input())
@@ -56,11 +70,9 @@ for t in range(test_case):
     max_cnt = -1
     for y in range(n):
         for x in range(n):
-            if (y == 0 and x == 0) or  (y == 0 and x == n-1) or (y == n-1 and  x == 0) or (y == n-1 and x == n-1):
+            if (y == x or y+x == n-1) and (y == 0 or y == n-1):
                 continue
-            # visited_menu = defaultdict(bool)
-            # visited_cafe = defaultdict(bool)
-            start_yx = (x, y)
-            search_path(x, y, 0)
+            start_yx = (y, x)
+            search_path(x, y, 0, visitied=[cafe_matrix[y][x]], test_v=[[x, y]])
 
     print(f"#{t+1} {max_cnt}")
