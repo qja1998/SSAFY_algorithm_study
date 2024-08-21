@@ -1,6 +1,5 @@
 from collections import defaultdict
 
-# 하 상 우 좌
 dyx = [(1, 0), (-1, 0), (0, 1), (0, -1)]
 
 def init_dict():
@@ -33,7 +32,7 @@ def bounce(wall, d):
             d = _simple_bounce(d)
     elif wall == 4:
         if d == 0 or d == 2:
-            d = (d+1) % 4
+            d = (d+3) % 4
         else:
             d = _simple_bounce(d)
     elif wall == 5:
@@ -41,6 +40,8 @@ def bounce(wall, d):
 
     return d
 
+def func(x, y):
+    return x + 1, y + 1
 # 웜홀
 def wormhall(wormhall, y, x):
     y_sum, x_sum = wormhall_dict[wormhall]
@@ -49,7 +50,6 @@ def wormhall(wormhall, y, x):
     return ny, nx
 
 def pin_ball(y, x, d, start_yx, score=0):
-    print(y, x, d)
 
     while True:
         global max_score
@@ -103,9 +103,6 @@ for t in range(test_case):
 
     max_score = 0
 
-    # # 위치에서의 최대 점수 / 안될듯?
-    # memo = []
-
     # (위치, 방향) : 방문 체크
     visited = defaultdict(bool)
 
@@ -118,5 +115,6 @@ for t in range(test_case):
                     continue
                 start_yx = (y, x)
                 pin_ball(y, x, d, start_yx)
-
+                print(x, y, d, 'max:', max_score)
+                
     print(f"#{t+1} {max_score}")
