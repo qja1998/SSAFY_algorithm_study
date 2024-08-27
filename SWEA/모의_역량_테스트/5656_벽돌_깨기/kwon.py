@@ -9,39 +9,52 @@ def remove_block(matrix, x, y):
     if matrix[x][y] == 0:
         return None, None
     
-    q = deque([(x, y)])
+    q = deque([(x, y, matrix[x][y])])
     visited = defaultdict(bool)
-
+    visited[(x, y)] = True
     
     cnt = 0
     while q:
-        x, y = q.popleft()
-        visited[(x, y)] = True
+        x, y, block_num = q.popleft()
         cnt += 1
+
+        matrix[x][y] = 0
         
-        for i in range(block_num):
+        for i in range(1, block_num):
 
             # 오른쪽
             if x+i < w and matrix[x+i][y] != 0 and not visited[(x+i, y)]:
-                q.append((x+i, y))
+                q.append((x+i, y, matrix[x+i][y]))
+                matrix[x+i][y] = 0
+                visited[(x+i, y)] = True
 
             # 왼쪽
             if x-i >= 0 and matrix[x-i][y] != 0 and not visited[(x-i, y)]:
-                q.append((x-i, y))
+                q.append((x-i, y, matrix[x-i][y]))
+                matrix[x-i][y] = 0
+                visited[(x-i, y)] = True
 
             # 위
-            if matrix[x][y] != 0 and not visited[(x, y)]:
-                q.append((x, y))
+            if y+i < h and matrix[x][y+i] != 0 and not visited[(x, y+i)]:
+                q.append((x, y+i, matrix[x][y+i]))
+                matrix[x][y+i] = 0
+                visited[(x, y+i)] = True
 
             # 아래
-            if  y-1 >= 0 and matrix[x][y-1] != 0 and not visited[(x, y-1)]:
-                q.append((x, y-1))
-
-    for x, y in visited:
-        if not visited[(x, y)]:
-            continue
-        matrix[x].pop(y)
-        matrix[x].appned(0)
+            if  y-i >= 0 and matrix[x][y-i] != 0 and not visited[(x, y-i)]:
+                q.append((x, y-i, matrix[x][y-i]))
+                matrix[x][y-i] = 0
+                visited[(x, y-i)] = True
+    
+    # 터진 곳 처리
+    for x in range(w):
+        y = 0
+        while matrix[x][y:] == [0] * (h-y-1):
+            if matrix[x][y] != 0:
+                y += 1
+                continue
+            matrix[x].pop(y)
+            matrix[x].append(0)
     
     return matrix, cnt
 
@@ -52,15 +65,19 @@ def find_num(arr):
     return -1
 
 def drop_ball(matrix, n, x, y, cnt = 0):
-    if n == 0:
-        global max_block
+    global max_block
+    if n == 0 or matrix == all_zero:
         max_block = max(max_block, cnt)
         return
     
     n_matrix, cnt_block = remove_block(deepcopy(matrix), x, y)
     if not n_matrix and not cnt_block:
         return
-    cnt += cnt_block + 1
+    cnt += cnt_block
+
+    if n_matrix == all_zero:
+        max_block = max(max_block, cnt)
+        return
 
     for nx in range(w):
         ny = find_num(n_matrix[nx])
@@ -77,6 +94,7 @@ for t in range(test_case):
     # 시계방향 90도 회전
     matrix = list(zip(*matrix[::-1]))
     matrix = [list(row) for row in matrix]
+    all_zero = [[0]*h for _ in range(w)]
 
     total_cnt = 0
     for row in matrix:
