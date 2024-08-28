@@ -1,9 +1,6 @@
 from copy import deepcopy
 from collections import deque, defaultdict
 
-def _debug_matrix(matrix):
-    return list(zip(*matrix[::-1]))
-
 def remove_block(matrix, x, y):
     block_num = matrix[x][y]
     if matrix[x][y] == 0:
@@ -58,6 +55,7 @@ def remove_block(matrix, x, y):
     
     return matrix, cnt
 
+# 가장 위에 있는 블록 찾기
 def find_num(arr):
     for i in range(h-1, -1, -1):
         if arr[i] > 0:
@@ -66,15 +64,19 @@ def find_num(arr):
 
 def drop_ball(matrix, n, x, y, cnt = 0):
     global max_block
+    # 횟수를 다 쓰거나, 모든 블록이 터짐
     if n == 0 or matrix == all_zero:
         max_block = max(max_block, cnt)
         return
     
+    # 지금 데이터 터뜨림
     n_matrix, cnt_block = remove_block(deepcopy(matrix), x, y)
+    # 혹시 블록이 없는 좌표를 선택했을 때
     if not n_matrix and not cnt_block:
         return
     cnt += cnt_block
 
+    # 모든 블록이 터졌으면 끝
     if n_matrix == all_zero:
         max_block = max(max_block, cnt)
         return
