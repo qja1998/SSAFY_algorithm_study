@@ -49,7 +49,7 @@ def remove_block(matrix, x, y):
     # 터진 곳 처리
     for x in range(w):
         y = 0
-        while matrix[x][y:] == [0] * (h-y-1):
+        while matrix[x][y:] != [0] * len(matrix[x][y:]):
             if matrix[x][y] != 0:
                 y += 1
                 continue
