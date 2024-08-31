@@ -1,0 +1,2 @@
+# 5249. 최소 신장 트리
+[문제 링크](https://swexpertacademy.com/main/talk/solvingClub/problemView.do?solveclubId=AZC_w6Z6yygDFAQW&contestProbId=AZGMAyt6u7ADFAXd&probBoxId=AZDfvJpqzpIDFAQW&type=USER&problemBoxTitle=10d_pracitce&problemBoxCnt=2)
