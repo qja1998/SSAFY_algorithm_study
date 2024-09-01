@@ -16,6 +16,7 @@ for t in range(1, TC+1):
 
     E = float(input())
 
+    # 가중치를 계산하여 그래프 만들기
     connect_dict = defaultdict(list)
     for i, land1 in enumerate(lands):
         for j, land2 in enumerate(lands[i+1:], start=i+1):
@@ -31,7 +32,9 @@ for t in range(1, TC+1):
     visited = set([first_land])
     mst = []
 
+    # MST 만들기 (PRIM)
     while min_heap:
+        # 가중치가 작은 간선 선택
         w, s, e = heapq.heappop(min_heap)
 
         if e in visited:
@@ -40,6 +43,7 @@ for t in range(1, TC+1):
         mst.append(w)
         visited.add(e)
 
+        # 선택한 간선과 인접한 노드 힙에 추가
         for ne, nw in connect_dict[e]:
             if ne in visited:
                 continue
