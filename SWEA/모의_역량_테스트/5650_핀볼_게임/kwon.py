@@ -1,45 +1,24 @@
+# code 1
+
 from collections import defaultdict
 
-# 하 상 우 좌
 dyx = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+
+change_dir = ((),
+              (2, 0, 3, 1),
+              (1, 2, 3, 0),
+              (1, 3, 0, 2),
+              (3, 0, 1, 2),
+              (1, 0, 3, 2))
+
+back_dir = defaultdict(bool)
+back_dir[(0, 1)] = True
+back_dir[(1, 0)] = True
+back_dir[(2, 3)] = True
+back_dir[(3, 2)] = True
 
 def init_dict():
     return [0, 0]
-
-# 일자 벽에 부딪힐 때
-def _simple_bounce(d):
-    if d % 2 == 0:
-        d += 1
-    else:
-        d -= 1
-    return False
-
-# 벽에 부딪힐 때
-def bounce(wall, d):
-    if wall == 1:
-        if d == 0 or d == 3:
-            d = (d+2) % 4
-        else:
-            d = _simple_bounce(d)
-    elif wall == 2:
-        if d == 1 or d == 3:
-            d = (d+1) % 4
-        else:
-            d = _simple_bounce(d)
-    elif wall == 3:
-        if d == 1 or d == 2:
-            d = (d+2) % 4
-        else:
-            d = _simple_bounce(d)
-    elif wall == 4:
-        if d == 0 or d == 2:
-            d = (d+1) % 4
-        else:
-            d = _simple_bounce(d)
-    elif wall == 5:
-        d = _simple_bounce(d)
-
-    return d
 
 # 웜홀
 def wormhall(wormhall, y, x):
@@ -48,41 +27,34 @@ def wormhall(wormhall, y, x):
     nx = x_sum - x
     return ny, nx
 
-def pin_ball(y, x, d, start_yx, score=0):
-    print(y, x, d)
+def pin_ball(y, x, d):
+    score = 0
+    start_yx = (y, x)
 
     while True:
-        global max_score
-        ny, nx = y + dyx[d][0], x + dyx[d][1]
+        y, x = y + dyx[d][0], x + dyx[d][1]
 
         # 범위 벗어나는 경우
-        if not(0 <= ny < n+1) or not(0 <= nx < n+1):
+        if not(0 <= y < n+2) or not(0 <= x < n+2):
+            print(y, x)
             return
         
-        visited[(y, x, d)] = True
+        cur_pos = pin_ball_map[y][x]
         
-        next_pos = pin_ball_map[ny][nx]
-        
-        if next_pos == 0:
-            y, x, d = ny, nx, d
-        elif 1 <= next_pos <= 5:
-            # 벽
-            nd = bounce(next_pos, d)
-            if not nd:
-                max_score = max(max_score, 2*score+1)
-                return
-            
-            y, x, d, score = ny, nx, nd, score+1
-
-        elif 6 <= next_pos <= 10:
-            # 웜홀
-            ny, nx = wormhall(next_pos, ny, nx)
-            y, x, score = ny, nx, score+1
-
-        elif next_pos == -1 or (ny, nx) == start_yx:
+        if cur_pos == -1 or (y, x) == start_yx:
             # 블랙홀, 도착지점
-            max_score = max(max_score, score)
-            return
+            return score
+        
+        if 1 <= cur_pos <= 5:
+            # 벽
+            nd = change_dir[pin_ball_map[y][x]][d]
+            if back_dir[(d, nd)]:
+                return 2*score+1
+            d, score = nd, score+1
+
+        elif 6 <= cur_pos <= 10:
+            # 웜홀
+            y, x = wormhall(cur_pos, y, x)
 
 test_case = int(input())
 
@@ -103,20 +75,10 @@ for t in range(test_case):
 
     max_score = 0
 
-    # # 위치에서의 최대 점수 / 안될듯?
-    # memo = []
-
-    # (위치, 방향) : 방문 체크
-    visited = defaultdict(bool)
-
     for y in range(1, n + 1):
         for x in range(1, n + 1):
             if pin_ball_map[y][x] != 0:
                 continue
             for d in range(4):
-                if visited[(y, x, d)]:
-                    continue
-                start_yx = (y, x)
-                pin_ball(y, x, d, start_yx)
-
+                max_score = max(max_score, pin_ball(y, x, d))
     print(f"#{t+1} {max_score}")
