@@ -23,8 +23,8 @@ def contact_search(contact_dict, start):
                 continue
             q.append([n_person, time+1])
             visited[n_person] = True
-        print(q)
-        print(last_people)
+        # print(q)
+        # print(last_people)
     return max(last_people)
 
 for t in range(1, TC+1):
