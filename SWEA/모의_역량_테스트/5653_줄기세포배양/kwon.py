@@ -33,6 +33,7 @@ for t in range(1, TC+1):
         for (x, y), (deactive, active, v) in cells.items():
             # 활성화 시간 끝나면 무시, 한 번 번식하면 무시
             if active != v:
+                cells[(x, y)][1] -= 1
                 continue
             if deactive == 0:
                 active_q.append([[x, y], [active, v]])
@@ -43,6 +44,8 @@ for t in range(1, TC+1):
         while active_q:
             # 어차피 한 번 번식하면 이 위치는 쓸 일 없음
             [x, y], [active, v] = active_q.popleft()
+
+            cells[(x, y)][1] -= 1
             
             for dx, dy in dxy:
                 nxy = x + dx, y + dy
@@ -59,7 +62,12 @@ for t in range(1, TC+1):
         # 번식된 세포 cell로 옮겨주기
         for nxy, (active, v) in child_cell.items():
             cells[nxy] = [v, v, v]
-        breakpoint()
+        # breakpoint()
 
-    print(cells)
-    print(f"#{t} {len(cells)}")
+    result = 0
+    for _, active, _ in cells.values():
+        if active <= 0:
+            continue
+        result += 1
+
+    print(f"#{t} {result}")
