@@ -4,19 +4,6 @@ dxy = [[0, 1], [0, -1], [1, 0], [-1, 0]]
 
 TC = int(input())
 
-def show_cell(cell_dict):
-    xys = cell_dict.keys()
-    max_x, min_x = max(xys, key=lambda x: x[0])[0], min(xys, key=lambda x: x[0])[0]
-    max_y, min_y = max(xys, key=lambda x: x[1])[1], min(xys, key=lambda x: x[1])[1]
-
-    show_matix = [[0]*(max_x-min_x+1) for _ in range(max_y-min_y+1)]
-    for y in range(max_y-min_y+1):
-        for x in range(max_x-min_x+1):
-            if (x+min_x, y+min_y) not in cell_dict:
-                continue
-            show_matix[y][x] = cell_dict[(x+min_x, y+min_y)][-1]
-    return show_matix
-
 for t in range(1, TC+1):
     N, M, K = map(int, input().split())
 
@@ -71,3 +58,18 @@ for t in range(1, TC+1):
         result += 1
 
     print(f"#{t} {result}")
+
+
+# 디버깅
+def show_cell(cell_dict):
+    xys = cell_dict.keys()
+    max_x, min_x = max(xys, key=lambda x: x[0])[0], min(xys, key=lambda x: x[0])[0]
+    max_y, min_y = max(xys, key=lambda x: x[1])[1], min(xys, key=lambda x: x[1])[1]
+
+    show_matix = [[0]*(max_x-min_x+1) for _ in range(max_y-min_y+1)]
+    for y in range(max_y-min_y+1):
+        for x in range(max_x-min_x+1):
+            if (x+min_x, y+min_y) not in cell_dict:
+                continue
+            show_matix[y][x] = cell_dict[(x+min_x, y+min_y)][-1]
+    return show_matix
