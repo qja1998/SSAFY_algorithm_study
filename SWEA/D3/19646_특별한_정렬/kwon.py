@@ -2,7 +2,6 @@ TC = int(input())
 
 for t in range(1, TC+1):
     n = int(input())
-
     nums = sorted(list(map(int, input().split())), reverse=True)
 
     result = [0] * 10
