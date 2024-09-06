@@ -12,9 +12,20 @@ from collections import defaultdict, deque
 #             dfs(n_node, graph, visited)
 #     return
 
-def bfs(start, end, graph, visited):
-    
+def bfs(start, graph, visited):
+    q=deque()
+    q.append(start)
+    visited[start] = True
+    while q:
+        s = q.popleft()
+        for e in graph[s]:
+            if visited[e]:
+                continue
+            visited[e] = True
+            q.append(e)
 
+# 순방향으로 왕복 모든 경로, 역방향으로 왕복 모든 경로
+# 겹치는 노드가 중첩 가능한 노드
 def main():
     n, m = map(int, input().split())
     graph = [[] for _ in range(n+1)]
@@ -28,19 +39,19 @@ def main():
 
     visited_s2e = [False] * (n+1)
     visited_s2e[end] = True
-    bfs(start, end, graph, visited_s2e)
+    bfs(start, graph, visited_s2e)
 
     visited_e2s = [False] * (n+1)
     visited_e2s[start] = True
-    bfs(end, start, graph, visited_e2s)
+    bfs(end, graph, visited_e2s)
 
     visited_s2e_rev = [False] * (n+1)
     # visited_s2e_rev[end] = True
-    bfs(start, end, graph_reverse, visited_s2e_rev)
+    bfs(start, graph_reverse, visited_s2e_rev)
 
     visited_e2s_rev = [False] * (n+1)
     # visited_e2s_rev[start] = True
-    bfs(end, start, graph_reverse, visited_e2s_rev)
+    bfs(end, graph_reverse, visited_e2s_rev)
     
     count=0
     for i in range(1,n+1):
