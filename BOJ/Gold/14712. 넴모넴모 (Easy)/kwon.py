@@ -26,19 +26,14 @@ def chk_nemo(x, y, installed):
         nx, ny = x+dx, y+dy
         if installed[(nx, ny)]:
             chk_cnt2 += 1
-
-    print(x, y)
-    print('cnt', chk_cnt1, chk_cnt2)
     
     return chk_cnt1 == 3 or chk_cnt2 == 3
 
 def fill_nemo(x, y, installed, visited):
-    global cnt
     if x >= N-1 and y >= M-1:
-        # for row in show_nemo(visited):
-        #     print(row)
-        # print()
-        cnt += 1
+        patterns.add(tuple(map(tuple, installed)))
+        for pattern in list(patterns):
+            print(patterns)
         return
     
     for dx, dy in dxy:
@@ -70,7 +65,7 @@ visited = defaultdict(bool)
 
 visited[(0, 0)] = True
 
-cnt = 0
+patterns = set()
 # 시작점에 넴모 놓지 않을 때
 fill_nemo(0, 0, installed, visited)
 
@@ -78,4 +73,4 @@ installed[(0, 0)] = True
 # 시작점에 넴모 놓을 때
 fill_nemo(0, 0, installed, visited)
 
-print(cnt)
+print(len(patterns))
