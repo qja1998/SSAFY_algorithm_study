@@ -1,69 +1,75 @@
-from collections import defaultdict, deque
+from collections import deque
 
-test_case = int(input())
-dxy = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+dxy = [[0, 1], [0, -1], [1, 0], [-1, 0]]
 
-def dict_init():
-    return (-1, -1, False)
+TC = int(input())
 
-for t in range(test_case):
-    n, m, k = map(int, input().split())
+for t in range(1, TC+1):
+    N, M, K = map(int, input().split())
 
-    matrix = defaultdict(dict_init)
-
-    q = deque()
-    for y in range(n):
-        for x, num in enumerate(map(int, input().split())):
-            matrix[(x, y)] = [num, num, False]
-            q.append([x, y, num, num, False])
-
-    # 생명력: X시간 비활성 -> X시간 활성 -> 죽음
-    # 이미 있는 경우 번식 x
-    # 동시 번식은 생명력 높은 애가
-
-    
-    print('q:', q)
-    for _ in range(k):
-        # 시작할 수 있는 세포가 나올 때까지 반복
-        while True:
-            (x, y, start_num, end_num, is_move) = q[0]
-            # 움직이기 전이라고 표시
-            if end_num and is_move:
-                is_move = False
-            if start_num == 0:
-                q[0][2] -= 1
-                matrix[(x, y)][0] -= 1
-                q.append(q.popleft())
+    cells = {}
+    for y in range(N):
+        for x, v in enumerate(list(map(int, input().split()))):
+            if v == 0:
                 continue
-            break
+            cells[(x, y)] = [v, v, v]
 
-        x, y, start_num, end_num, is_move = q.popleft()
-
-        # 딕셔너리와 다르면 이미 먹힌 것
-        if [start_num, end_num, is_move] != matrix[(x, y)]:
-            continue
-
-        for dx, dy in dxy:
-            nx = x + dx
-            ny = y + dy
-
-            n_start_num, n_end_num, n_is_move = matrix[(nx, ny)]
-
-            # 움직이기 전 세포로는 번식 못함
-            if not n_is_move:
+    active_q = deque()
+    for time in range(K):
+        # 비활성 시간이 끝나면 활성화 큐에 넣기
+        for (x, y), (deactive, active, v) in cells.items():
+            # 활성화 시간 끝나면 무시, 한 번 번식하면 무시
+            if active != v:
+                cells[(x, y)][1] -= 1
                 continue
+            if deactive == 0:
+                active_q.append([[x, y], [active, v]])
+            cells[(x, y)][0] -= 1
+
+        # 번식 진행
+        child_cell = {}
+        while active_q:
+            # 어차피 한 번 번식하면 이 위치는 쓸 일 없음
+            [x, y], [active, v] = active_q.popleft()
+
+            cells[(x, y)][1] -= 1
             
-            # 생명력이 더 크다면 번식 가능
-            if n_end_num < num:
-                # 죽음
-                if end_num-1 == 0:
-                    matrix[(nx, ny)] = -1, -1, False
+            for dx, dy in dxy:
+                nxy = x + dx, y + dy
+                # 이미 세포가 있는 곳은 무시
+                if nxy in cells:
                     continue
-                q.append([nx, ny, start_num, end_num-1, True])
-                matrix[(nx, ny)] = start_num, end_num-1, True
+                # 같은 곳으로 번식할 때
+                if nxy in child_cell:
+                    # 저장되어 있는 생명력이 높으면 스킵
+                    if v < child_cell[nxy][1]:
+                        continue
+                child_cell[nxy] = [active-1, v]
+        
+        # 번식된 세포 cell로 옮겨주기
+        for nxy, (active, v) in child_cell.items():
+            cells[nxy] = [v, v, v]
+        # breakpoint()
 
-    for xy in matrix:
-        print(xy)
-        # print(matrix[xy])
+    result = 0
+    for _, active, _ in cells.values():
+        if active <= 0:
+            continue
+        result += 1
 
-    print(f"#{t+1} {len(matrix)}")
+    print(f"#{t} {result}")
+
+
+# 디버깅
+def show_cell(cell_dict):
+    xys = cell_dict.keys()
+    max_x, min_x = max(xys, key=lambda x: x[0])[0], min(xys, key=lambda x: x[0])[0]
+    max_y, min_y = max(xys, key=lambda x: x[1])[1], min(xys, key=lambda x: x[1])[1]
+
+    show_matix = [[0]*(max_x-min_x+1) for _ in range(max_y-min_y+1)]
+    for y in range(max_y-min_y+1):
+        for x in range(max_x-min_x+1):
+            if (x+min_x, y+min_y) not in cell_dict:
+                continue
+            show_matix[y][x] = cell_dict[(x+min_x, y+min_y)][-1]
+    return show_matix

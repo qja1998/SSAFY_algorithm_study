@@ -1,4 +1,3 @@
-import math
 from collections import defaultdict
 from itertools import permutations
 
@@ -29,8 +28,6 @@ test_case = int(input())
 for t in range(test_case):
     n = int(input())
     mass_list = list(map(int, input().split()))
-
-    total_num = 2**n * math.factorial(n)
 
     cnt = 0
     memo = defaultdict(int)

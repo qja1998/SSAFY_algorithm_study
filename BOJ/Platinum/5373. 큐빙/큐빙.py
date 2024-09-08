@@ -179,6 +179,7 @@ for t in range(test_case):
         ],
     }
 
+    # for debug
     # cube = {
     #     'u': [
     #         ['w1', 'w2', 'w3'],
