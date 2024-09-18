@@ -32,14 +32,17 @@ def move(x, y, dir_idx):
 
     try:
         if next_y in apples[next_x]:
+            # 사과 먹기
             snake.append([next_x, next_y])
             apples[next_x].remove(next_y)
         elif [next_x, next_y] in snake or not (0 <= next_x < n) or not (0 <= next_y < n):
+            # 끝나는 조건
             return [-1, -1]
         else:
+            # 기본 이동
             snake.append([next_x, next_y])
             snake.pop(0)
-    except:
+    except: # 오류가 발생했을 경우 apple 있는 곳이 아니라는 뜻 (이렇게 코드 짜시면 안됩니다.)
         if [next_x, next_y] in snake or not (0 <= next_x < n) or not (0 <= next_y < n):
             return [-1, -1]
         else:
