@@ -1,13 +1,37 @@
-from collections import defaultdict, deque
+# dfs
+import sys
+from collections import deque
 
-freinds = defaultdict(list)
+input = sys.stdin.readline
+sys.setrecursionlimit(100000)
 
-N, M = map(int, input().split())
+n, m = map(int , input().split())
+visited = [False]*(n)
+adjacent = [ [] for _ in range(n) ]
+arrive = False
 
-for _ in range(M):
-    a, b = map(int, input().split())
-    freinds[a].append(b)
-    freinds[b].append(a)
+for _ in range(m):
+    a,b = map(int, input().split())
+    adjacent[a].append(b)
+    adjacent[b].append(a)
 
-visited = []
-ans = 0
+def dfs(start , depth):
+    global arrive
+    visited[start]=True
+    if depth==5:
+        arrive = True
+        return
+    for i in adjacent[start]:
+        if visited[i] == False:
+            dfs(i , depth+1)
+    visited[start]=False
+
+for i in range(n):
+    dfs(i ,1)
+    if arrive:
+        break
+
+if arrive:
+    print(1)
+else:
+    print(0)

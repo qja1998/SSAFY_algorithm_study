@@ -1,5 +1,3 @@
-operate = ['+', '-', '*','/']
-
 N = int(input())
 nums = list(map(int, input().split()))
 operator_counter = list(map(int, input().split()))
