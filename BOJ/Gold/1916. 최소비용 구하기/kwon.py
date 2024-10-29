@@ -36,7 +36,7 @@ def dijkstra(start, dest):
                 distance[station[0]] = dist + station[1]   #
                 heapq.heappush(q, (dist+station[1], station[0]))
 
-                print(dest)
+                # print(dest)
 
     return distance[dest]
 
